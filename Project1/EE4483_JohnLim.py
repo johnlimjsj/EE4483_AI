@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 from fractions import Fraction
-
+cnt=0
 def findRoot(subj, rootv):
 	def _findRoot(x_knext, x_k):
+		global cnt
+		cnt+=1
 		if (abs(x_knext - x_k) < 0.0000000001):
 			return x_knext;
 		else:
@@ -35,27 +37,32 @@ def findPowAndRoot(subj, power, root):
 	final = pow(final, power)
 	return final
 
-def GetRange(x,n):
-    y=1
-    while (pow(y,n) < x):
-        y*=2
-    return (y/2,y)
+def GetRange(subj,pwr):
+    range=1
+    subj = abs(subj)
+    while (pow(range,pwr) < subj):
+        range*=2
+    return (range/2,range)
+count = 0
 
-def BinSearch(a,b,x,n):
+def BinSearch(first,last,subj,pwr):
 	# If you want to floor the root include below:
     # w1 = x - pow(a,n)
     # w2 = pow(b,n) - x
-    if (b <= a+0.00000000001):
-    	return a
-        # if w1 < w2:
-        #    return a
-        # else:
-        #    return b
-    c = (float(a)+b)/2
-    if (x < pow(c,n)) :
-        return BinSearch(a,c,x,n)
+    global count
+    count+=1
+    first=abs(first)
+    last=abs(last)
+    if (last <= first+0.0000000001):
+    	if subj < 0: return -first
+    	else: return first
+        # if w1 < w2: return a
+        # else: return b
+    mid = (float(first)+last)/2
+    if (abs(subj) < pow(mid,pwr)) :
+        return BinSearch(first,mid,subj,pwr)
     else:
-        return BinSearch(c,b,x,n)
+        return BinSearch(mid,last,subj,pwr)
 
 def findBinRoot(num, power, root):
 	num = pow(num,power)
@@ -68,20 +75,27 @@ def findBinRoot(num, power, root):
 # a = Fraction(0.6).limit_denominator()
 # print a.numerator
 # print a.denominator
-
-number = input('Enter a number you want to perform a root opertion on: ')
-print "Next I will ask you to input the power. "
-print "If you want the number to have a power of 3/5 for instance: "
-print " when prompted to key in the power: key in '3' "
-print "when prompted to key in the root, key in '5' "
-power = input('Enter the power: ')
-root = input("Enter the root: ")
+while(1):
+	number = input('Enter a number you want to perform a root opertion on: ')
+	print "Next I will ask you to input the power. "
+	print "If you want the number to have a power of 3/5 for instance: "
+	print " when prompted to key in the power: key in '3' "
+	print "when prompted to key in the root, key in '5' "
+	power = input('Enter the power: ')
+	root = input("Enter the root: ")
+	print root%2
+	if(number<0 and root%2==0): 
+		print "Invalid input. Answer is not a real number. Please Key in again"
+	else: break
+	
 # ans = findPowAndRoot(999,3,5)
 ans_bin = findBinRoot(number,power,root)
 ans_newton = findPowAndRoot(number, power, root)
 print "Performing operation of ", number, "^", power, "/", root
 print "Power by the Binary Search Algorithm: ", ans_bin
+print "binary search iterations: ", count
 print "Power by the Newton Rhapsodian Algorithm: ", ans_newton
+print "newton method iterations: ", cnt
 
 
 
